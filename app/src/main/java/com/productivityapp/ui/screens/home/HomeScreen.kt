@@ -61,7 +61,7 @@ fun HomeScreen(
             ) {
                 item {
                     Text(
-                        text = "Recent Projects",
+                        text = "最近项目",
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -69,8 +69,8 @@ fun HomeScreen(
                 if (uiState.recentProjects.isEmpty()) {
                     item {
                         EmptyStateCard(
-                            message = "No projects yet",
-                            subtitle = "Create your first project to get started"
+                            message = "暂无项目",
+                            subtitle = "创建你的第一个项目开始吧"
                         )
                     }
                 } else {
@@ -92,7 +92,7 @@ fun HomeScreen(
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Today's Tasks",
+                        text = "今日任务",
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -100,8 +100,8 @@ fun HomeScreen(
                 if (uiState.todayTasks.isEmpty()) {
                     item {
                         EmptyStateCard(
-                            message = "No tasks for today",
-                            subtitle = "Enjoy your free day!"
+                            message = "今天没有任务",
+                            subtitle = "好好休息吧！"
                         )
                     }
                 } else {
@@ -168,7 +168,7 @@ fun RecentProjectCard(
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text("Start", style = MaterialTheme.typography.labelSmall)
+                Text("开始", style = MaterialTheme.typography.labelSmall)
             }
         }
     }

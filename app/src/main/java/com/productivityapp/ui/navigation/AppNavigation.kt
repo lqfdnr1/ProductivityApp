@@ -27,6 +27,7 @@ sealed class Screen(val route: String) {
         fun createRoute(projectId: Long) = "guided/$projectId"
     }
     object Calendar : Screen("calendar")
+    object ProjectSetup : Screen("project_setup")
 }
 
 data class BottomNavItem(

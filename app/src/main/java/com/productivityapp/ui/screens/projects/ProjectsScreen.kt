@@ -26,6 +26,7 @@ import com.productivityapp.ui.theme.ProjectColors
 @Composable
 fun ProjectsScreen(
     onNavigateToProject: (Long) -> Unit,
+    onNavigateToProjectSetup: () -> Unit,
     viewModel: ProjectsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -34,7 +35,7 @@ fun ProjectsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Projects") },
+                title = { Text("项目") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 )
@@ -42,10 +43,10 @@ fun ProjectsScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { viewModel.showCreateDialog() },
+                onClick = onNavigateToProjectSetup,
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Create Project")
+                Icon(Icons.Default.Add, contentDescription = "创建项目")
             }
         }
     ) { padding ->

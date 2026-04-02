@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">生产力</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">首页</string>
+    <string name="nav_projects">项目</string>
+    <string name="nav_calendar">日历</string>
+    
+    <!-- Home Screen -->
+    <string name="recent_projects">最近项目</string>
+    <string name="todays_tasks">今日任务</string>
+    <string name="no_projects_yet">暂无项目</string>
+    <string name="create_first_project">创建你的第一个项目开始吧</string>
+    <string name="no_tasks_today">今天没有任务</string>
+    <string name="enjoy_free_day">好好休息吧！</string>
+    <string name="start">开始</string>
+    <string name="no_description">暂无描述</string>
+    
+    <!-- Projects Screen -->
+    <string name="create_project">创建项目</string>
+    <string name="edit_project">编辑项目</string>
+    <string name="delete_project">删除项目</string>
+    <string name="project_title">项目名称</string>
+    <string name="project_description">项目描述</string>
+    <string name="project_color">项目颜色</string>
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="edit">编辑</string>
+    <string name="all">全部</string>
+    <string name="active">进行中</string>
+    <string name="completed">已完成</string>
+    <string name="archived">已归档</string>
+    <string name="no_projects_found">没有找到项目</string>
+    <string name="add_plan">添加计划</string>
+    <string name="mark_completed">标记完成</string>
+    
+    <!-- Project Detail -->
+    <string name="project">项目</string>
+    <string name="plans">计划</string>
+    <string name="no_plans_yet">暂无计划</string>
+    <string name="add_first_plan">添加第一个计划来分解这个项目</string>
+    <string name="create_plan">创建计划</string>
+    <string name="edit_plan">编辑计划</string>
+    <string name="plan_title">计划名称</string>
+    <string name="plan_description">计划描述</string>
+    <string name="tasks">任务</string>
+    <string name="tasks_count">%1$d / %2$d 任务</string>
+    
+    <!-- Tasks -->
+    <string name="add_task">添加任务</string>
+    <string name="edit_task">编辑任务</string>
+    <string name="delete_task">删除任务</string>
+    <string name="task_title">任务名称</string>
+    <string name="task_description">任务描述</string>
+    <string name="due_date">截止日期</string>
+    <string name="no_due_date">未设置</string>
+    <string name="priority">优先级</string>
+    <string name="status">状态</string>
+    <string name="pending">待处理</string>
+    <string name="in_progress">进行中</string>
+    <string name="high_priority">高优先级</string>
+    <string name="medium_priority">中优先级</string>
+    <string name="low_priority">低优先级</string>
+    <string name="no_tasks_yet">暂无任务</string>
+    <string name="add_first_task">添加第一个任务</string>
+    <string name="delete_task_confirm">确定要删除这个任务吗？</string>
+    
+    <!-- Guided Mode -->
+    <string name="guided_mode">引导模式</string>
+    <string name="exit_guided_mode">退出引导模式？</string>
+    <string name="progress_saved">你的进度已保存</string>
+    <string name="exit">退出</string>
+    <string name="continue_guided">继续</string>
+    <string name="task_of_total">第 %1$d 个任务，共 %2$d 个</string>
+    <string name="previous">上一个</string>
+    <string name="skip">跳过</string>
+    <string name="mark_complete">标记完成</string>
+    <string name="all_done">全部完成！</string>
+    <string name="congratulations">恭喜！</string>
+    <string name="you_completed_all_tasks">你已完成这个项目的所有任务</string>
+    <string name="go_back">返回</string>
+    <string name="finish">完成</string>
+    <string name="empty_project">项目为空</string>
+    <string name="no_tasks_in_project">这个项目没有任务</string>
+    
+    <!-- Encouraging Messages -->
+    <string name="encourage_start">✨ 让我们开始吧！你能做到的！</string>
+    <string name="encourage_progress">👍 不错的开始！保持专注！</string>
+    <string name="encourage_halfway">💪 一半了！你做得很好！</string>
+    <string name="encourage_almost">🔥 马上完成了！继续加油！</string>
+    <string name="encourage_done">🎉 太棒了！你完成了所有任务！</string>
+    
+    <!-- Calendar -->
+    <string name="calendar">日历</string>
+    <string name="tasks_for_date">%1$s 的任务</string>
+    <string name="no_tasks_for_day">这天没有任务</string>
+    
+    <!-- Project Type Selection -->
+    <string name="select_project_type">选择项目类型</string>
+    <string name="type_a_b">A/B类</string>
+    <string name="type_a_b_desc">全新平台/大改动，完整流程</string>
+    <string name="type_c_mold">C类开模</string>
+    <string name="type_c_mold_desc">小改动开模，缩短周期</string>
+    <string name="type_c_no_mold">C类不开模</string>
+    <string name="type_c_no_mold_desc">仅企划立项→整机测试→P3评审</string>
+    <string name="type_d">D类</string>
+    <string name="type_d_desc">仅外观变动，极简流程</string>
+    
+    <!-- Development Phases -->
+    <string name="phase_planning">企划立项</string>
+    <string name="phase_structure">结构设计</string>
+    <string name="phase_mold_release">模号下发</string>
+    <string name="phase_mold_start">模具开工</string>
+    <string name="phase_express">快件制作</string>
+    <string name="phase_proto评审">样机评审</string>
+    <string name="phase_test">整机测试</string>
+    <string name="phase_p3">P3评审</string>
+    
+    <!-- Clear date -->
+    <string name="clear_date">清除日期</string>
+    <string name="ok">确定</string>
+</resources>

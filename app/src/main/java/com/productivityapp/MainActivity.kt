@@ -19,6 +19,7 @@ import com.productivityapp.ui.navigation.Screen
 import com.productivityapp.ui.navigation.bottomNavItems
 import com.productivityapp.ui.screens.calendar.CalendarScreen
 import com.productivityapp.ui.screens.guide.GuidedModeScreen
+import com.productivityapp.ui.screens.guide.ProjectSetupScreen
 import com.productivityapp.ui.screens.home.HomeScreen
 import com.productivityapp.ui.screens.projects.ProjectDetailScreen
 import com.productivityapp.ui.screens.projects.ProjectsScreen
@@ -100,6 +101,9 @@ fun MainApp() {
                 ProjectsScreen(
                     onNavigateToProject = { projectId ->
                         navController.navigate(Screen.ProjectDetail.createRoute(projectId))
+                    },
+                    onNavigateToProjectSetup = {
+                        navController.navigate(Screen.ProjectSetup.route)
                     }
                 )
             }
@@ -158,6 +162,16 @@ fun MainApp() {
 
             composable(Screen.Calendar.route) {
                 CalendarScreen()
+            }
+
+            composable(Screen.ProjectSetup.route) {
+                ProjectSetupScreen(
+                    onNavigateBack = { navController.popBackStack() },
+                    onProjectCreated = { projectId ->
+                        navController.popBackStack()
+                        navController.navigate(Screen.ProjectDetail.createRoute(projectId))
+                    }
+                )
             }
         }
     }
