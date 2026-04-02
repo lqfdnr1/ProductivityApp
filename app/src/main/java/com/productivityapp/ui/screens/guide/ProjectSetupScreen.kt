@@ -317,14 +317,12 @@ fun Step2_Options(
                     FilterChip(
                         selected = hasMold,
                         onClick = { onHasMoldChange(true) },
-                        label = { Text("需要开模") },
-                        leadingIcon = if (hasMold) Icon(Icons.Default.Check, null, Modifier.size(18.dp)) else null
+                        label = { Text("需要开模") }
                     )
                     FilterChip(
                         selected = !hasMold,
                         onClick = { onHasMoldChange(false) },
-                        label = { Text("不开模") },
-                        leadingIcon = if (!hasMold) Icon(Icons.Default.Check, null, Modifier.size(18.dp)) else null
+                        label = { Text("不开模") }
                     )
                 }
             }
@@ -343,14 +341,12 @@ fun Step2_Options(
                     FilterChip(
                         selected = !isIoT,
                         onClick = { onIsIoTChange(false) },
-                        label = { Text("非物联产品") },
-                        leadingIcon = if (!isIoT) Icon(Icons.Default.Check, null, Modifier.size(18.dp)) else null
+                        label = { Text("非物联产品") }
                     )
                     FilterChip(
                         selected = isIoT,
                         onClick = { onIsIoTChange(true) },
-                        label = { Text("物联家电") },
-                        leadingIcon = if (isIoT) Icon(Icons.Default.Check, null, Modifier.size(18.dp)) else null
+                        label = { Text("物联家电") }
                     )
                 }
             }
@@ -414,7 +410,7 @@ fun Step3_ProjectInfo(
             placeholder = { Text("例如：新一代智能穿戴设备") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            leadingIcon = Icon(Icons.Default.Folder)
+            leadingIcon = { Icon(Icons.Default.Folder, contentDescription = null) }
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -425,7 +421,7 @@ fun Step3_ProjectInfo(
             label = { Text("项目描述（选填）") },
             modifier = Modifier.fillMaxWidth(),
             maxLines = 3,
-            leadingIcon = Icon(Icons.Default.Description)
+            leadingIcon = { Icon(Icons.Default.Description, contentDescription = null) }
         )
 
         Spacer(modifier = Modifier.height(12.dp))
