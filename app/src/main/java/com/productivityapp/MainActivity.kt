@@ -20,6 +20,7 @@ import com.productivityapp.ui.navigation.bottomNavItems
 import com.productivityapp.ui.screens.calendar.CalendarScreen
 import com.productivityapp.ui.screens.guide.GuidedModeScreen
 import com.productivityapp.ui.screens.guide.ProjectSetupScreen
+import com.productivityapp.ui.screens.template.TemplateManagementScreen
 import com.productivityapp.ui.screens.home.HomeScreen
 import com.productivityapp.ui.screens.projects.ProjectDetailScreen
 import com.productivityapp.ui.screens.projects.ProjectsScreen
@@ -171,6 +172,12 @@ fun MainApp() {
                         navController.popBackStack()
                         navController.navigate(Screen.ProjectDetail.createRoute(projectId))
                     }
+                )
+            }
+
+            composable(Screen.TemplateManagement.route) {
+                TemplateManagementScreen(
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
         }

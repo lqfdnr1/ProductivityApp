@@ -163,22 +163,22 @@ fun FilterChips(
         FilterChip(
             selected = selectedFilter == null,
             onClick = { onFilterSelected(null) },
-            label = { Text("All") }
+            label = { Text("全部") }
         )
         FilterChip(
             selected = selectedFilter == ProjectStatus.ACTIVE,
             onClick = { onFilterSelected(ProjectStatus.ACTIVE) },
-            label = { Text("Active") }
+            label = { Text("进行中") }
         )
         FilterChip(
             selected = selectedFilter == ProjectStatus.COMPLETED,
             onClick = { onFilterSelected(ProjectStatus.COMPLETED) },
-            label = { Text("Completed") }
+            label = { Text("已完成") }
         )
         FilterChip(
             selected = selectedFilter == ProjectStatus.ARCHIVED,
             onClick = { onFilterSelected(ProjectStatus.ARCHIVED) },
-            label = { Text("Archived") }
+            label = { Text("已归档") }
         )
     }
 }
@@ -208,14 +208,14 @@ fun ProjectDialog(
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Title") },
+                    label = { Text("名称") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description") },
+                    label = { Text("描述") },
                     maxLines = 3,
                     modifier = Modifier.fillMaxWidth()
                 )

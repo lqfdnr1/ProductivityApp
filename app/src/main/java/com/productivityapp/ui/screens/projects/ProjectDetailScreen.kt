@@ -53,7 +53,7 @@ fun ProjectDetailScreen(
                         onDismissRequest = { showMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Add Plan") },
+                            text = { Text("添加计划") },
                             onClick = {
                                 showMenu = false
                                 viewModel.showCreatePlanDialog()
@@ -309,14 +309,14 @@ fun PlanDialog(
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Title") },
+                    label = { Text("名称") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description") },
+                    label = { Text("描述") },
                     maxLines = 3,
                     modifier = Modifier.fillMaxWidth()
                 )

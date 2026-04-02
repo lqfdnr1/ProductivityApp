@@ -28,6 +28,7 @@ sealed class Screen(val route: String) {
     }
     object Calendar : Screen("calendar")
     object ProjectSetup : Screen("project_setup")
+    object TemplateManagement : Screen("template_management")
 }
 
 data class BottomNavItem(
@@ -37,7 +38,7 @@ data class BottomNavItem(
 )
 
 val bottomNavItems = listOf(
-    BottomNavItem(Screen.Home.route, Icons.Default.Home, "Home"),
-    BottomNavItem(Screen.Projects.route, Icons.Default.Folder, "Projects"),
-    BottomNavItem(Screen.Calendar.route, Icons.Default.CalendarMonth, "Calendar")
+    BottomNavItem(Screen.Home.route, Icons.Default.Home, "首页"),
+    BottomNavItem(Screen.Projects.route, Icons.Default.Folder, "项目"),
+    BottomNavItem(Screen.Calendar.route, Icons.Default.CalendarMonth, "日历")
 )

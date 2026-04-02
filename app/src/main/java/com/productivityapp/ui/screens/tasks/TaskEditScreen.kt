@@ -90,7 +90,7 @@ fun TaskEditScreen(
                 OutlinedTextField(
                     value = uiState.description,
                     onValueChange = { viewModel.updateDescription(it) },
-                    label = { Text("Description") },
+                    label = { Text("描述") },
                     maxLines = 5,
                     modifier = Modifier.fillMaxWidth()
                 )
