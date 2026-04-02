@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.Divider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -162,7 +163,7 @@ fun TaskEditScreen(
                     }
                 }
 
-                HorizontalDivider()
+                Divider()
 
                 // PRD: 前置任务选择
                 Text("前置任务依赖", style = MaterialTheme.typography.labelMedium)
@@ -263,7 +264,7 @@ fun TaskEditScreen(
                     }
                 }
 
-                HorizontalDivider()
+                Divider()
 
                 // Due Date
                 Text("截止日期", style = MaterialTheme.typography.labelMedium)
