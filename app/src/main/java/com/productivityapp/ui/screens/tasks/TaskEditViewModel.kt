@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.productivityapp.data.model.Task
+import com.productivityapp.data.model.TaskCategory
 import com.productivityapp.data.model.TaskPriority
 import com.productivityapp.data.model.TaskStatus
 import com.productivityapp.data.repository.TaskRepository
@@ -13,7 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 data class TaskEditUiState(
@@ -23,9 +23,12 @@ data class TaskEditUiState(
     val dueDate: Long? = null,
     val priority: TaskPriority = TaskPriority.MEDIUM,
     val status: TaskStatus = TaskStatus.PENDING,
+    val preTaskId: Long? = null,        // PRD: 前置任务ID
+    val category: TaskCategory = TaskCategory.NEW_PRODUCT, // PRD: 任务类别
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
-    val savedSuccessfully: Boolean = false
+    val savedSuccessfully: Boolean = false,
+    val canStart: Boolean = true  // PRD: 前置任务是否满足
 )
 
 @HiltViewModel
@@ -51,6 +54,7 @@ class TaskEditViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             taskRepository.getTaskByIdOnce(taskId)?.let { task ->
+                val canStart = taskRepository.canStartTask(task.id)
                 _uiState.update {
                     it.copy(
                         task = task,
@@ -59,7 +63,10 @@ class TaskEditViewModel @Inject constructor(
                         dueDate = task.dueDate,
                         priority = task.priority,
                         status = task.status,
-                        isLoading = false
+                        preTaskId = task.preTaskId,
+                        category = task.category,
+                        isLoading = false,
+                        canStart = canStart
                     )
                 }
             }
@@ -82,6 +89,20 @@ class TaskEditViewModel @Inject constructor(
         _uiState.update { it.copy(priority = priority) }
     }
 
+    fun updateStatus(status: TaskStatus) {
+        _uiState.update { it.copy(status = status) }
+    }
+
+    // PRD: 更新前置任务
+    fun updatePreTaskId(preTaskId: Long?) {
+        _uiState.update { it.copy(preTaskId = preTaskId) }
+    }
+
+    // PRD: 更新任务类别
+    fun updateCategory(category: TaskCategory) {
+        _uiState.update { it.copy(category = category) }
+    }
+
     fun saveTask() {
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true) }
@@ -96,7 +117,9 @@ class TaskEditViewModel @Inject constructor(
                 priority = state.priority,
                 status = state.status,
                 order = state.task?.order ?: 0,
-                createdAt = state.task?.createdAt ?: System.currentTimeMillis()
+                createdAt = state.task?.createdAt ?: System.currentTimeMillis(),
+                preTaskId = state.preTaskId,
+                category = state.category
             )
 
             val savedId = if (task.id == 0L) {

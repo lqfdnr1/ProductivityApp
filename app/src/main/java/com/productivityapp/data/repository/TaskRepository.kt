@@ -25,7 +25,12 @@ class TaskRepository @Inject constructor(
     fun getTasksByProject(projectId: Long): Flow<List<Task>> =
         taskDao.getTasksByProject(projectId)
 
+    fun getTasksByProjectAndCategory(projectId: Long, category: String): Flow<List<Task>> =
+        taskDao.getTasksByProjectAndCategory(projectId, category)
+
     suspend fun insertTask(task: Task): Long = taskDao.insertTask(task)
+
+    suspend fun insertTasks(tasks: List<Task>) = taskDao.insertTasks(tasks)
 
     suspend fun updateTask(task: Task) = taskDao.updateTask(task)
 
@@ -42,4 +47,26 @@ class TaskRepository @Inject constructor(
 
     suspend fun getTaskCountByStatus(planId: Long, status: TaskStatus): Int =
         taskDao.getTaskCountByStatus(planId, status)
+
+    // PRD: 前置任务依赖检查 - 判断任务是否可以启动
+    suspend fun canStartTask(taskId: Long): Boolean {
+        val task = taskDao.getTaskByIdOnce(taskId) ?: return false
+        val preTaskId = task.preTaskId ?: return true  // 无前置任务，可直接启动
+        val preTaskStatus = taskDao.getPreTaskStatus(preTaskId) ?: return true
+        return preTaskStatus == TaskStatus.COMPLETED
+    }
+
+    // PRD: 获取任务完成率（按类别）
+    suspend fun getCategoryCompletionRate(projectId: Long, category: String): Float {
+        val total = taskDao.getTotalTaskCountByCategory(projectId, category)
+        if (total == 0) return 0f
+        val completed = taskDao.getCompletedTaskCountByCategory(projectId, category)
+        return completed.toFloat() / total
+    }
+
+    // PRD: 批量检查并更新阻塞任务状态
+    suspend fun updateBlockedTaskStatuses(projectId: Long) {
+        // This would be called to refresh blocked statuses
+        // Implementation depends on having the full task list
+    }
 }

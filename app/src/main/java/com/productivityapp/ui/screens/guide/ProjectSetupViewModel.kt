@@ -7,6 +7,7 @@ import com.productivityapp.data.model.Plan
 import com.productivityapp.data.model.Project
 import com.productivityapp.data.model.ProjectStatus
 import com.productivityapp.data.model.Task
+import com.productivityapp.data.model.TaskCategory
 import com.productivityapp.data.model.TaskPriority
 import com.productivityapp.data.model.TaskStatus
 import com.productivityapp.data.repository.PlanRepository
@@ -63,7 +64,9 @@ data class TaskTemplate(
     val isRequiredForClassCMold: Boolean = false, // 定制C类
     val isRequiredForClassCCustom: Boolean = false, // 定制C-类
     var duration: Int = 3, // 工作日
-    var customStartOffset: Int = 0 // 自定义开始偏移天数
+    var customStartOffset: Int = 0, // 自定义开始偏移天数
+    // PRD: 任务所属环节（对应模块3-7）
+    val category: String = "新品"
 )
 
 // 完整任务模板库
@@ -114,20 +117,20 @@ object TaskTemplateLibrary {
         TaskTemplate(46, "功能样机评审问题点闭环确认", "评审问题闭环确认表", "开发模块经理", prerequisites = listOf(39, 44)),
         
         // 模具
-        TaskTemplate(47, "输出产品零部件技术预算单", "", "结构模块经理", prerequisites = listOf(46)),
-        TaskTemplate(48, "模具招标", "", "模具产品实现经理", prerequisites = listOf(47)),
-        TaskTemplate(50, "尺寸链计算与审核", "尺寸链计算与审核表", "结构模块经理"),
-        TaskTemplate(51, "模具开工", "", "结构模块经理"),
-        TaskTemplate(53, "模具制作", "", "模具竞争力经理", prerequisites = listOf(48), duration = 30),
-        TaskTemplate(57, "模具合格验收", "", "模具竞争力经理", prerequisites = listOf(53)),
-        TaskTemplate(60, "模具调拨完成", "", "模具竞争力经理"),
+        TaskTemplate(47, "输出产品零部件技术预算单", "", "结构模块经理", prerequisites = listOf(46), category = "模具"),
+        TaskTemplate(48, "模具招标", "", "模具产品实现经理", prerequisites = listOf(47), category = "模具"),
+        TaskTemplate(50, "尺寸链计算与审核", "尺寸链计算与审核表", "结构模块经理", category = "模具"),
+        TaskTemplate(51, "模具开工", "", "结构模块经理", category = "模具"),
+        TaskTemplate(53, "模具制作", "", "模具竞争力经理", prerequisites = listOf(48), duration = 30, category = "模具"),
+        TaskTemplate(57, "模具合格验收", "", "模具竞争力经理", prerequisites = listOf(53), category = "模具"),
+        TaskTemplate(60, "模具调拨完成", "", "模具竞争力经理", category = "模具"),
         
         // 初级样机
-        TaskTemplate(78, "初级样机试制", "", "开发模块经理", duration = 5),
-        TaskTemplate(79, "UI界面显示板可点亮", "评审问题汇总表", "开发模块经理"),
-        TaskTemplate(80, "DFMEA分析优化", "DFMEA分析", "开发模块经理"),
-        TaskTemplate(81, "初级样机评审", "初级样机评审表，评审问题汇总表", "开发模块经理", prerequisites = listOf(46, 78)),
-        TaskTemplate(82, "初级样机评审问题点闭环确认", "评审问题闭环确认表", "开发模块经理", prerequisites = listOf(46, 78)),
+        TaskTemplate(78, "初级样机试制", "", "开发模块经理", duration = 5, category = "试验"),
+        TaskTemplate(79, "UI界面显示板可点亮", "评审问题汇总表", "开发模块经理", category = "试验"),
+        TaskTemplate(80, "DFMEA分析优化", "DFMEA分析", "开发模块经理", category = "试验"),
+        TaskTemplate(81, "初级样机评审", "初级样机评审表，评审问题汇总表", "开发模块经理", prerequisites = listOf(46, 78), category = "试验"),
+        TaskTemplate(82, "初级样机评审问题点闭环确认", "评审问题闭环确认表", "开发模块经理", prerequisites = listOf(46, 78), category = "试验"),
         
         // 外观与拍照
         TaskTemplate(83, "最终外观确认", "", "企划经理"),
@@ -137,18 +140,18 @@ object TaskTemplateLibrary {
         TaskTemplate(86, "通知供应链储备大宗物料", "", "开发模块经理+事业部新品经理"),
         
         // 工艺样机
-        TaskTemplate(87, "工艺样机试制", "新产品试制记录单、新产品试制工作总结", "开发模块经理", prerequisites = listOf(81), duration = 5),
-        TaskTemplate(88, "UI界面显示板可点亮", "评审问题汇总表", "开发模块经理"),
-        TaskTemplate(89, "整机外观测量记录", "整机外观尺寸测量报告", "开发模块经理"),
-        TaskTemplate(90, "试验样机委托", "", "开发模块经理"),
-        TaskTemplate(91, "用户测试体验样机到位", "", "开发模块经理"),
-        TaskTemplate(92, "用户测试体验完成", "用户测试体验报告", "测试体验经理", prerequisites = listOf(91)),
-        TaskTemplate(93, "当地化用户模拟实验合格", "当地化用户模拟实验报告", "开发模块经理"),
-        TaskTemplate(94, "试验按期完成", "", "性能测试工程师"),
+        TaskTemplate(87, "工艺样机试制", "新产品试制记录单、新产品试制工作总结", "开发模块经理", prerequisites = listOf(81), duration = 5, category = "试验"),
+        TaskTemplate(88, "UI界面显示板可点亮", "评审问题汇总表", "开发模块经理", category = "试验"),
+        TaskTemplate(89, "整机外观测量记录", "整机外观尺寸测量报告", "开发模块经理", category = "试验"),
+        TaskTemplate(90, "试验样机委托", "", "开发模块经理", category = "试验"),
+        TaskTemplate(91, "用户测试体验样机到位", "", "开发模块经理", category = "试验"),
+        TaskTemplate(92, "用户测试体验完成", "用户测试体验报告", "测试体验经理", prerequisites = listOf(91), category = "试验"),
+        TaskTemplate(93, "当地化用户模拟实验合格", "当地化用户模拟实验报告", "开发模块经理", category = "试验"),
+        TaskTemplate(94, "试验按期完成", "", "性能测试工程师", category = "试验"),
         
         // 认证
-        TaskTemplate(95, "确认认证部件BOM", "零部件安全认证清单", "开发模块经理"),
-        TaskTemplate(96, "市场准入审核（安全、EMC、能耗）", "第三方证书、第三方测试报告", "认证经理", prerequisites = listOf(95)),
+        TaskTemplate(95, "确认认证部件BOM", "零部件安全认证清单", "开发模块经理", category = "认证"),
+        TaskTemplate(96, "市场准入审核（安全、EMC、能耗）", "第三方证书、第三方测试报告", "认证经理", prerequisites = listOf(95), category = "认证"),
         
         // 其他
         TaskTemplate(98, "智家互联互通总结", "", "开发模块经理"),
@@ -159,18 +162,18 @@ object TaskTemplateLibrary {
         TaskTemplate(101, "工艺样机评审问题闭环确认", "评审问题闭环确认表", "开发模块经理", prerequisites = listOf(100)),
         
         // 小批样机
-        TaskTemplate(102, "小批样机试制", "新产品试制记录单（小批）、零部件一致性确认表", "开发模块经理", prerequisites = listOf(101), duration = 5),
-        TaskTemplate(103, "30/30样机测试", "", "开发模块经理", prerequisites = listOf(102)),
-        TaskTemplate(104, "小批样机评审", "小批样机评审表，小批样机评审问题点汇总表", "开发模块经理", prerequisites = listOf(101, 103)),
-        TaskTemplate(105, "小批样机评审问题点闭环确认", "评审问题闭环确认表", "开发模块经理", prerequisites = listOf(101, 103)),
+        TaskTemplate(102, "小批样机试制", "新产品试制记录单（小批）、零部件一致性确认表", "开发模块经理", prerequisites = listOf(101), duration = 5, category = "试验"),
+        TaskTemplate(103, "30/30样机测试", "", "开发模块经理", prerequisites = listOf(102), category = "试验"),
+        TaskTemplate(104, "小批样机评审", "小批样机评审表，小批样机评审问题点汇总表", "开发模块经理", prerequisites = listOf(101, 103), category = "试验"),
+        TaskTemplate(105, "小批样机评审问题点闭环确认", "评审问题闭环确认表", "开发模块经理", prerequisites = listOf(101, 103), category = "试验"),
         
         // GEA评审
-        TaskTemplate(107, "GEA 安全评审", "GEA安全评审清单", "开发项目经理"),
-        TaskTemplate(108, "GEA ip4h评审", "ip4h清单", "开发项目经理"),
+        TaskTemplate(107, "GEA 安全评审", "GEA安全评审清单", "开发项目经理", category = "认证"),
+        TaskTemplate(108, "GEA ip4h评审", "ip4h清单", "开发项目经理", category = "认证"),
         
         // 项目收尾
         TaskTemplate(109, "流转问题闭环确认", "评审问题闭环确认表", "开发模块经理"),
-        TaskTemplate(110, "操作/检验指导书培训交接", "操作/检验指导书交接单", "开发项目经理"),
+        TaskTemplate(110, "操作/检验指导书培训交接", "操作/检验指导书交接单", "开发项目经理", category = "资料"),
         TaskTemplate(111, "交互设计交互体验评审会", "", "开发项目经理", prerequisites = listOf(96, 101, 105, 107, 108)),
         TaskTemplate(112, "产品BOM稽核", "", "开发项目经理", prerequisites = listOf(111)),
         TaskTemplate(113, "项目总结", "开发完成报告书", "开发项目经理", prerequisites = listOf(111, 112)),
@@ -592,13 +595,23 @@ class ProjectSetupViewModel @Inject constructor(
                 val planId = planRepository.insertPlan(plan)
 
                 for (scheduled in tasks) {
+                    val taskCategory = when (scheduled.template.category) {
+                        "模具" -> TaskCategory.MOLD
+                        "试验" -> TaskCategory.TEST
+                        "资料" -> TaskCategory.DOCUMENT
+                        "认证" -> TaskCategory.CERTIFICATION
+                        else -> TaskCategory.NEW_PRODUCT
+                    }
                     val task = Task(
                         planId = planId,
                         title = scheduled.template.name,
                         description = "交付件: ${scheduled.template.deliverable}\n被指派: ${scheduled.template.assignee}",
                         dueDate = scheduled.plannedEndDate,
                         priority = TaskPriority.MEDIUM,
-                        status = TaskStatus.PENDING
+                        status = TaskStatus.PENDING,
+                        // PRD: 前置任务依赖 - 取模板第一个前置任务作为主前置
+                        preTaskId = null, // Will be resolved after all tasks are created
+                        category = taskCategory
                     )
                     taskRepository.insertTask(task)
                 }
