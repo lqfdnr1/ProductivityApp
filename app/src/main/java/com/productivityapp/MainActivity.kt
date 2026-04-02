@@ -92,6 +92,9 @@ fun MainApp() {
                     onNavigateToProject = { projectId ->
                         navController.navigate(Screen.ProjectDetail.createRoute(projectId))
                     },
+                    onNavigateToProjectSetup = {
+                        navController.navigate(Screen.ProjectSetup.route)
+                    },
                     onNavigateToGuided = { projectId ->
                         navController.navigate(Screen.GuidedMode.createRoute(projectId))
                     }
