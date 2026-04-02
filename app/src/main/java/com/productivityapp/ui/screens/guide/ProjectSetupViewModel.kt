@@ -451,10 +451,10 @@ class ProjectSetupViewModel @Inject constructor(
             fillForegroundColor = IndexedColors.GREY_25_PERCENT.index
             fillPattern = FillPatternType.SOLID_FOREGROUND
             alignment = HorizontalAlignment.CENTER
-            borderBottom = BorderThickness.THIN
-            borderTop = BorderThickness.THIN
-            borderLeft = BorderThickness.THIN
-            borderRight = BorderThickness.THIN
+            borderBottom = BorderStyle.THIN
+            borderTop = BorderStyle.THIN
+            borderLeft = BorderStyle.THIN
+            borderRight = BorderStyle.THIN
         }
         val headerFont = workbook.createFont().apply {
             bold = true
@@ -463,10 +463,10 @@ class ProjectSetupViewModel @Inject constructor(
 
         // 创建数据样式
         val dataStyle = workbook.createCellStyle().apply {
-            borderBottom = BorderThickness.THIN
-            borderTop = BorderThickness.THIN
-            borderLeft = BorderThickness.THIN
-            borderRight = BorderThickness.THIN
+            borderBottom = BorderStyle.THIN
+            borderTop = BorderStyle.THIN
+            borderLeft = BorderStyle.THIN
+            borderRight = BorderStyle.THIN
         }
 
         // 设置列宽
