@@ -105,6 +105,9 @@ fun MainApp() {
                     },
                     onNavigateToProjectSetup = {
                         navController.navigate(Screen.ProjectSetup.route)
+                    },
+                    onNavigateToTemplateManagement = {
+                        navController.navigate(Screen.TemplateManagement.route)
                     }
                 )
             }

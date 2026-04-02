@@ -27,6 +27,7 @@ import com.productivityapp.ui.theme.ProjectColors
 fun ProjectsScreen(
     onNavigateToProject: (Long) -> Unit,
     onNavigateToProjectSetup: () -> Unit,
+    onNavigateToTemplateManagement: () -> Unit,
     viewModel: ProjectsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -36,6 +37,25 @@ fun ProjectsScreen(
         topBar = {
             TopAppBar(
                 title = { Text("项目") },
+                actions = {
+                    var showMenu by remember { mutableStateOf(false) }
+                    IconButton(onClick = { showMenu = true }) {
+                        Icon(Icons.Default.MoreVert, contentDescription = "更多")
+                    }
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("模板管理") },
+                            onClick = {
+                                showMenu = false
+                                onNavigateToTemplateManagement()
+                            },
+                            leadingIcon = { Icon(Icons.Default.Settings, contentDescription = null) }
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 )

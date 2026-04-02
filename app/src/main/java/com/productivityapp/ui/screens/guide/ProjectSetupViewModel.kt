@@ -15,6 +15,10 @@ import com.productivityapp.data.repository.TaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.apache.poi.ss.usermodel.*
+import org.apache.poi.ss.util.CellRangeAddress
+import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -432,6 +436,124 @@ class ProjectSetupViewModel @Inject constructor(
             )
         }
         return sb.toString()
+    }
+
+    // 生成XLSX格式的字节数组
+    fun generateXLSXExport(): ByteArray {
+        val state = _uiState.value
+        val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        val workbook = XSSFWorkbook()
+        val sheet = workbook.createSheet("项目计划")
+
+        // 创建表头样式
+        val headerStyle = workbook.createCellStyle().apply {
+            fillForegroundColor = IndexedColors.GREY_25_PERCENT.index
+            fillPattern = FillPatternType.SOLID_FOREGROUND
+            alignment = HorizontalAlignment.CENTER
+            borderBottom = BorderThickness.THIN
+            borderTop = BorderThickness.THIN
+            borderLeft = BorderThickness.THIN
+            borderRight = BorderThickness.THIN
+        }
+        val headerFont = workbook.createFont().apply {
+            bold = true
+        }
+        headerStyle.setFont(headerFont)
+
+        // 创建数据样式
+        val dataStyle = workbook.createCellStyle().apply {
+            borderBottom = BorderThickness.THIN
+            borderTop = BorderThickness.THIN
+            borderLeft = BorderThickness.THIN
+            borderRight = BorderThickness.THIN
+        }
+
+        // 设置列宽
+        val columnWidths = intArrayOf(800, 4000, 3000, 2000, 2500, 2500, 3000, 1500)
+        columnWidths.forEachIndexed { index, width ->
+            sheet.setColumnWidth(index, width * 50)
+        }
+
+        // 创建表头
+        val headers = listOf("序号", "任务名称", "交付件", "被指派者", "计划开始时间", "计划结束时间", "前置任务", "工期(天)", "状态")
+        val headerRow = sheet.createRow(0)
+        headers.forEachIndexed { index, header ->
+            val cell = headerRow.createCell(index)
+            cell.setCellValue(header)
+            cell.cellStyle = headerStyle
+        }
+        headerRow.heightInPoints = 25f
+
+        // 按阶段分组显示
+        val phaseGroups = state.scheduledTasks.groupBy { scheduled ->
+            when {
+                scheduled.template.id <= 20 -> "一、立项阶段"
+                scheduled.template.id <= 51 -> "二、结构设计"
+                scheduled.template.id <= 60 -> "三、模具阶段"
+                scheduled.template.id <= 92 -> "四、样机验证"
+                scheduled.template.id <= 105 -> "五、测试评审"
+                else -> "六、项目收尾"
+            }
+        }
+
+        var currentRow = 1
+        val phaseStyle = workbook.createCellStyle().apply {
+            fillForegroundColor = IndexedColors.LIGHT_BLUE.index
+            fillPattern = FillPatternType.SOLID_FOREGROUND
+            alignment = HorizontalAlignment.LEFT
+        }
+        val phaseFont = workbook.createFont().apply {
+            bold = true
+            color = IndexedColors.WHITE.index
+        }
+        phaseStyle.setFont(phaseFont)
+
+        // 输出所有任务，不分组
+        for (scheduled in state.scheduledTasks) {
+            val task = scheduled.template
+            val prerequisites = task.prerequisites.mapNotNull { prereqId ->
+                state.selectedTasks.find { it.id == prereqId }?.name
+            }.joinToString(";")
+
+            val row = sheet.createRow(currentRow)
+            row.heightInPoints = 20f
+
+            // 序号
+            row.createCell(0).apply { setCellValue(task.id.toDouble()); cellStyle = dataStyle }
+            // 任务名称
+            row.createCell(1).apply { setCellValue(task.name); cellStyle = dataStyle }
+            // 交付件
+            row.createCell(2).apply { setCellValue(task.deliverable); cellStyle = dataStyle }
+            // 被指派者
+            row.createCell(3).apply { setCellValue(task.assignee); cellStyle = dataStyle }
+            // 计划开始时间
+            row.createCell(4).apply { setCellValue(dateFormat.format(Date(scheduled.plannedStartDate))); cellStyle = dataStyle }
+            // 计划结束时间
+            row.createCell(5).apply { setCellValue(dateFormat.format(Date(scheduled.plannedEndDate))); cellStyle = dataStyle }
+            // 前置任务
+            row.createCell(6).apply { setCellValue(prerequisites); cellStyle = dataStyle }
+            // 工期
+            row.createCell(7).apply { setCellValue(task.duration.toDouble()); cellStyle = dataStyle }
+            // 状态
+            row.createCell(8).apply { setCellValue(if (scheduled.isCompleted) "已完成" else "待处理"); cellStyle = dataStyle }
+
+            currentRow++
+        }
+
+        // 添加统计行
+        currentRow++
+        val summaryRow = sheet.createRow(currentRow)
+        summaryRow.createCell(0).apply { setCellValue("合计"); cellStyle = dataStyle }
+        summaryRow.createCell(7).apply { 
+            setCellValue(state.scheduledTasks.sumOf { it.template.duration }.toDouble())
+            cellStyle = dataStyle
+        }
+
+        val outputStream = ByteArrayOutputStream()
+        workbook.write(outputStream)
+        workbook.close()
+        return outputStream.toByteArray()
     }
 
     fun createProject() {

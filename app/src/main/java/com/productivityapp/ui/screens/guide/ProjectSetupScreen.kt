@@ -61,11 +61,32 @@ fun ProjectSetupScreen(
                         }
                     }
                     if (uiState.step == 3) {
-                        IconButton(onClick = {
-                            val csv = viewModel.generateCSVExport()
-                            shareText(context, csv, "项目计划_${uiState.projectName}.csv")
-                        }) {
+                        var showExportMenu by remember { mutableStateOf(false) }
+                        IconButton(onClick = { showExportMenu = true }) {
                             Icon(Icons.Default.Share, contentDescription = "导出")
+                        }
+                        DropdownMenu(
+                            expanded = showExportMenu,
+                            onDismissRequest = { showExportMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("导出 CSV 格式") },
+                                onClick = {
+                                    showExportMenu = false
+                                    val csv = viewModel.generateCSVExport()
+                                    shareText(context, csv, "项目计划_${uiState.projectName}.csv")
+                                },
+                                leadingIcon = { Icon(Icons.Default.TableChart, contentDescription = null) }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("导出 XLSX 格式（Excel）") },
+                                onClick = {
+                                    showExportMenu = false
+                                    val xlsxBytes = viewModel.generateXLSXExport()
+                                    shareFile(context, xlsxBytes, "项目计划_${uiState.projectName}.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                },
+                                leadingIcon = { Icon(Icons.Default.GridOn, contentDescription = null) }
+                            )
                         }
                     }
                 },
@@ -620,6 +641,28 @@ fun shareText(context: Context, content: String, filename: String) {
             type = "text/csv"
             putExtra(Intent.EXTRA_TEXT, content)
             putExtra(Intent.EXTRA_SUBJECT, filename)
+        }
+        context.startActivity(Intent.createChooser(intent, "分享项目计划"))
+    } catch (e: Exception) {
+        Toast.makeText(context, "分享失败: ${e.message}", Toast.LENGTH_SHORT).show()
+    }
+}
+
+fun shareFile(context: Context, content: ByteArray, filename: String, mimeType: String) {
+    try {
+        // Write to cache directory
+        val cacheDir = context.cacheDir
+        val file = java.io.File(cacheDir, filename)
+        file.writeBytes(content)
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = mimeType
+            putExtra(Intent.EXTRA_STREAM, androidx.core.content.FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                file
+            ))
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
         context.startActivity(Intent.createChooser(intent, "分享项目计划"))
     } catch (e: Exception) {
