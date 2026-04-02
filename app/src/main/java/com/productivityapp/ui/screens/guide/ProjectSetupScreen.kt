@@ -30,8 +30,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProjectSetupScreen(
     onNavigateBack: () -> Unit,
@@ -288,6 +286,7 @@ fun ProjectTypeCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Step2_Options(
     hasMold: Boolean,
