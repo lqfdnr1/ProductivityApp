@@ -35,12 +35,6 @@ jobs:
           name: app-debug APK
           path: app/build/outputs/apk/debug/*.apk
 
-      - name: Create Release Tag
-        if: github.ref == 'refs/heads/main'
-        run: |
-          git tag "apk-$(date +%Y%m%d-%H%M%S)"
-          git push origin --tags
-
       - name: Upload APK to Release
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v1
@@ -48,5 +42,6 @@ jobs:
           files: app/build/outputs/apk/debug/*.apk
           name: Debug APK
           body: "Auto-generated debug APK from CI build"
+          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
