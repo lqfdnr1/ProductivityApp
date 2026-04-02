@@ -54,7 +54,7 @@ fun ProgressBar(
         }
 
         LinearProgressIndicator(
-            progress = { animatedValue },
+            progress = animatedValue,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp)
