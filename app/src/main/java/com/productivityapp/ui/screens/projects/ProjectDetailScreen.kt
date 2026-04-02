@@ -1,21 +1,25 @@
 package com.productivityapp.ui.screens.projects
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.productivityapp.data.model.Plan
 import com.productivityapp.data.model.ProjectStatus
 import com.productivityapp.data.model.Task
+import com.productivityapp.data.model.TaskCategory
 import com.productivityapp.data.model.TaskStatus
 import com.productivityapp.ui.components.ProgressBar
 import com.productivityapp.ui.components.StatusChip
@@ -111,6 +115,13 @@ fun ProjectDetailScreen(
                     item {
                         ProjectHeader(project = project)
                     }
+                    // PRD: 模块3-7 环节进度
+                    item {
+                        CategoryProgressSection(
+                            categoryProgress = uiState.categoryProgress,
+                            overallProgress = uiState.overallProgress
+                        )
+                    }
                 }
 
                 if (uiState.plans.isEmpty()) {
@@ -181,6 +192,109 @@ fun ProjectHeader(project: com.productivityapp.data.model.Project) {
                 )
             }
         }
+    }
+}
+
+// PRD: 模块3-7 环节进度展示
+@Composable
+fun CategoryProgressSection(
+    categoryProgress: List<CategoryProgress>,
+    overallProgress: Float
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
+        )
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("环节进度（模块3-7）", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    "整体 ${(overallProgress * 100).toInt()}%",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // 整体进度条
+            LinearProgressIndicator(
+                progress = { overallProgress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 各环节进度
+            categoryProgress.forEach { cp ->
+                if (cp.total > 0) { // 只显示有任务的环节
+                    CategoryProgressRow(cp)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CategoryProgressRow(cp: CategoryProgress) {
+    val icon = when (cp.category) {
+        TaskCategory.NEW_PRODUCT -> Icons.Default.Description
+        TaskCategory.MOLD -> Icons.Default.Build
+        TaskCategory.TEST -> Icons.Default.Science
+        TaskCategory.DOCUMENT -> Icons.Default.Folder
+        TaskCategory.CERTIFICATION -> Icons.Default.VerifiedUser
+    }
+
+    val color = when (cp.category) {
+        TaskCategory.NEW_PRODUCT -> Color(0xFF4CAF50)
+        TaskCategory.MOLD -> Color(0xFF2196F3)
+        TaskCategory.TEST -> Color(0xFFFF9800)
+        TaskCategory.DOCUMENT -> Color(0xFF9C27B0)
+        TaskCategory.CERTIFICATION -> Color(0xFFE91E63)
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier.size(20.dp)
+        )
+        Text(
+            text = cp.category.displayName,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.width(60.dp)
+        )
+        LinearProgressIndicator(
+            progress = { cp.progress },
+            modifier = Modifier
+                .weight(1f)
+                .height(6.dp)
+                .clip(RoundedCornerShape(3.dp)),
+            color = color,
+            trackColor = color.copy(alpha = 0.2f),
+        )
+        Text(
+            text = "${cp.completed}/${cp.total}",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 

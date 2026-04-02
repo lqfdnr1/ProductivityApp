@@ -7,6 +7,8 @@ import com.productivityapp.data.model.Plan
 import com.productivityapp.data.model.Project
 import com.productivityapp.data.model.ProjectStatus
 import com.productivityapp.data.model.Task
+import com.productivityapp.data.model.TaskCategory
+import com.productivityapp.data.model.TaskStatus
 import com.productivityapp.data.repository.PlanRepository
 import com.productivityapp.data.repository.ProjectRepository
 import com.productivityapp.data.repository.TaskRepository
@@ -15,13 +17,23 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class CategoryProgress(
+    val category: TaskCategory,
+    val total: Int,
+    val completed: Int,
+    val progress: Float // 0.0 - 1.0
+)
+
 data class ProjectDetailUiState(
     val project: Project? = null,
     val plans: List<Plan> = emptyList(),
     val tasksByPlan: Map<Long, List<Task>> = emptyMap(),
     val isLoading: Boolean = true,
     val showPlanDialog: Boolean = false,
-    val editingPlan: Plan? = null
+    val editingPlan: Plan? = null,
+    // PRD: 模块3-7 环节进度
+    val categoryProgress: List<CategoryProgress> = emptyList(),
+    val overallProgress: Float = 0f
 )
 
 @HiltViewModel
@@ -60,8 +72,11 @@ class ProjectDetailViewModel @Inject constructor(
                     launch {
                         taskRepository.getTasksByPlan(plan.id).collect { tasks ->
                             _uiState.update { state ->
+                                val allTasks = state.tasksByPlan.values.flatten() + tasks
                                 state.copy(
-                                    tasksByPlan = state.tasksByPlan + (plan.id to tasks)
+                                    tasksByPlan = state.tasksByPlan + (plan.id to tasks),
+                                    categoryProgress = calculateCategoryProgress(allTasks),
+                                    overallProgress = calculateOverallProgress(allTasks)
                                 )
                             }
                         }
@@ -69,6 +84,27 @@ class ProjectDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    // PRD: 按环节计算完成率
+    private fun calculateCategoryProgress(allTasks: List<Task>): List<CategoryProgress> {
+        return TaskCategory.entries.map { category ->
+            val categoryTasks = allTasks.filter { it.category == category }
+            val completed = categoryTasks.count { it.status == TaskStatus.COMPLETED }
+            val total = categoryTasks.size
+            CategoryProgress(
+                category = category,
+                total = total,
+                completed = completed,
+                progress = if (total > 0) completed.toFloat() / total else 0f
+            )
+        }
+    }
+
+    // PRD: 计算项目整体完成率
+    private fun calculateOverallProgress(allTasks: List<Task>): Float {
+        if (allTasks.isEmpty()) return 0f
+        return allTasks.count { it.status == TaskStatus.COMPLETED }.toFloat() / allTasks.size
     }
 
     fun showCreatePlanDialog() {
