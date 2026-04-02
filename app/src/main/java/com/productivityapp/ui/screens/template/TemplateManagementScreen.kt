@@ -260,7 +260,7 @@ fun TaskEditDialog(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider()
+                Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(MaterialTheme.colorScheme.outlineVariant))
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // 前置任务
