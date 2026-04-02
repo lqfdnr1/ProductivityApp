@@ -117,6 +117,7 @@ fun TasksScreen(
 }
 
 // PRD: 模块3-7 环节过滤器
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryFilterBar(
     selectedCategory: TaskCategory?,

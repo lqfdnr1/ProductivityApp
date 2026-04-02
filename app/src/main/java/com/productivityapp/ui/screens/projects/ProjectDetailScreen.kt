@@ -225,7 +225,7 @@ fun CategoryProgressSection(
 
             // 整体进度条
             LinearProgressIndicator(
-                progress = { overallProgress },
+                progress = overallProgress,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
@@ -282,7 +282,7 @@ fun CategoryProgressRow(cp: CategoryProgress) {
             modifier = Modifier.width(60.dp)
         )
         LinearProgressIndicator(
-            progress = { cp.progress },
+            progress = cp.progress,
             modifier = Modifier
                 .weight(1f)
                 .height(6.dp)

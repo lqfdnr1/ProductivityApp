@@ -234,7 +234,7 @@ fun ProjectOverviewCard(
             }
             Spacer(modifier = Modifier.height(8.dp))
             LinearProgressIndicator(
-                progress = { progress },
+                progress = progress,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(6.dp)
@@ -292,7 +292,7 @@ fun CategoryOverviewRow(
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator(
-                            progress = { progress },
+                            progress = progress,
                             modifier = Modifier.fillMaxSize(),
                             color = color,
                             trackColor = color.copy(alpha = 0.2f),
