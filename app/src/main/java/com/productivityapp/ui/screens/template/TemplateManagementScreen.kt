@@ -25,6 +25,14 @@ fun TemplateManagementScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showResetDialog by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Show success snackbar when save succeeds
+    LaunchedEffect(uiState.saveSuccess) {
+        if (uiState.saveSuccess) {
+            snackbarHostState.showSnackbar("✅ 模板已保存")
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -36,6 +44,19 @@ fun TemplateManagementScreen(
                     }
                 },
                 actions = {
+                    // 保存按钮
+                    if (uiState.isSaving) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        IconButton(
+                            onClick = { viewModel.saveCustomizations() }
+                        ) {
+                            Icon(Icons.Default.Save, contentDescription = "保存模板")
+                        }
+                    }
                     IconButton(onClick = { showResetDialog = true }) {
                         Icon(Icons.Default.Refresh, contentDescription = "重置全部")
                     }
@@ -44,7 +65,8 @@ fun TemplateManagementScreen(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 )
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -67,6 +89,12 @@ fun TemplateManagementScreen(
                         "调整默认工期和前置任务关系，修改后将影响新建项目的任务排程。",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        "💡 修改后请点击顶部 💾 保存按钮来保存您的更改。",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -213,8 +241,8 @@ fun TaskEditDialog(
     onReset: () -> Unit
 ) {
     var showAddPrereqDialog by remember { mutableStateOf(false) }
-    val availablePrereqs = allTasks.filter { 
-        it.id != task.id && it.id !in task.prerequisites 
+    val availablePrereqs = allTasks.filter {
+        it.id != task.id && it.id !in task.prerequisites
     }
 
     AlertDialog(

@@ -50,8 +50,48 @@ class PreferencesManager @Inject constructor(
         }
     }
 
+    // Template customizations
+    val customDurations: Flow<Map<String, Int>> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { prefs -> 
+            val durationsJson = prefs[PreferencesKeys.TEMPLATE_CUSTOM_DURATIONS] ?: "{}"
+            try {
+                val obj = org.json.JSONObject(durationsJson)
+                val map = mutableMapOf<String, Int>()
+                obj.keys().forEach { key -> map[key] = obj.getInt(key) }
+                map
+            } catch (e: Exception) { emptyMap() }
+        }
+
+    val customPrerequisites: Flow<Map<String, List<Int>>> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { prefs ->
+            val prereqsJson = prefs[PreferencesKeys.TEMPLATE_CUSTOM_PREREQUISITES] ?: "{}"
+            try {
+                val obj = org.json.JSONObject(prereqsJson)
+                val map = mutableMapOf<String, List<Int>>()
+                obj.keys().forEach { key -> 
+                    val arr = obj.getJSONArray(key)
+                    val list = (0 until arr.length()).map { arr.getInt(it) }
+                    map[key] = list
+                }
+                map
+            } catch (e: Exception) { emptyMap() }
+        }
+
+    suspend fun saveTemplateCustomizations(durations: Map<String, Int>, prerequisites: Map<String, List<Int>>) {
+        dataStore.edit { prefs ->
+            prefs[PreferencesKeys.TEMPLATE_CUSTOM_DURATIONS] = org.json.JSONObject(durations.mapValues { it.value }).toString()
+            prefs[PreferencesKeys.TEMPLATE_CUSTOM_PREREQUISITES] = org.json.JSONObject(prerequisites.mapValues { 
+                org.json.JSONArray(it.value) 
+            }).toString()
+        }
+    }
+
     private object PreferencesKeys {
         val DARK_MODE = booleanPreferencesKey("dark_mode")
         val LAST_GUIDED_PROJECT_ID = longPreferencesKey("last_guided_project_id")
+        val TEMPLATE_CUSTOM_DURATIONS = stringPreferencesKey("template_custom_durations")
+        val TEMPLATE_CUSTOM_PREREQUISITES = stringPreferencesKey("template_custom_prerequisites")
     }
 }
